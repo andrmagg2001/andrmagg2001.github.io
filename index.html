@@ -38,35 +38,6 @@
       font-family: var(--font-sans);
       line-height: 1.6;
       overflow-x: hidden;
-      cursor: none;
-    }
-
-    /* ─── CUSTOM CURSOR ─────────────────────────────── */
-    #cursor {
-      position: fixed;
-      width: 8px; height: 8px;
-      background: var(--text-primary);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s, background 0.2s, opacity 0.2s;
-    }
-    #cursor-ring {
-      position: fixed;
-      width: 36px; height: 36px;
-      border: 1px solid rgba(240,240,240,0.3);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: all 0.12s ease;
-    }
-    body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 0; height: 0; }
-    body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring {
-      width: 56px; height: 56px;
-      background: rgba(240,240,240,0.06);
-      border-color: rgba(240,240,240,0.6);
     }
 
     /* ─── NOISE OVERLAY ─────────────────────────────── */
@@ -224,25 +195,24 @@
     }
     .btn-ghost:hover { color: var(--text-primary); border-color: var(--text-muted); transform: translateY(-1px); }
     .scroll-indicator {
-      position: absolute; right: 48px; bottom: 80px;
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      margin-top: 48px;
       opacity: 0; animation: fadeIn 1s ease 1.2s forwards;
     }
     .scroll-indicator span {
       font-size: 11px; font-family: var(--font-mono);
-      color: var(--text-muted); writing-mode: vertical-rl;
-      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
-    .scroll-line {
-      width: 1px; height: 60px;
-      background: linear-gradient(to bottom, var(--text-muted), transparent);
-      animation: scrollAnim 2s ease infinite 1.5s;
+    .scroll-chevron {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      animation: bounceDown 2s ease infinite 1.5s;
     }
-    @keyframes scrollAnim {
-      0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
-      50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
-      51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
-      100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+    .scroll-chevron svg { display: block; }
+    @keyframes bounceDown {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(6px); opacity: 1; }
     }
     @keyframes fadeIn { to { opacity: 1; } }
 
@@ -786,19 +756,12 @@
       .contact-email { font-size: 14px; word-break: break-all; }
     }
 
-    /* Hide custom cursor on touch-only devices */
     @media (hover: none) {
-      #cursor, #cursor-ring { display: none; }
-      body { cursor: auto; }
       a, button { cursor: pointer; }
     }
   </style>
 </head>
 <body>
-
-<!-- ─── CURSOR ─────────────────────────────────────── -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
 
 <!-- ─── NAV ───────────────────────────────────────── -->
 <nav id="navbar">
@@ -828,8 +791,6 @@
 
 <!-- ─── HERO ───────────────────────────────────────── -->
 <section class="hero">
-  <div class="hero-badge">Available for research collaborations</div>
-
   <h1 class="hero-title">
     <span class="line"><span>Andrea</span></span>
     <span class="line"><span>Maggiore.</span></span>
@@ -842,8 +803,9 @@
   </div>
 
   <div class="scroll-indicator" aria-hidden="true">
-    <div class="scroll-line"></div>
-    <span>scroll</span>
+    <div class="scroll-chevron">
+      <svg width="20" height="12" viewBox="0 0 20 12" fill="none"><path d="M1 1L10 10L19 1" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
   </div>
 </section>
 
@@ -868,7 +830,7 @@
         <div class="stat-label">years C/C++</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">2</div>
+        <div class="stat-num">1</div>
         <div class="stat-label">ongoing papers</div>
       </div>
       <div class="stat-item">
@@ -1109,18 +1071,6 @@
       </div>
     </a>
 
-    <!-- Thesis -->
-    <a href="https://github.com/andrmagg2001/Conditional-Music-Generation" target="_blank" rel="noopener" class="pub-card">
-      <div class="pub-status">On-going · MSc Thesis</div>
-      <div class="pub-title">Conditional Music Generation — Real-Time AI Accompaniment</div>
-      <div class="pub-desc">Neural pipeline that analyses live guitar performances (chord progression, tempo, style) and generates multi-track accompaniments (bass, drums, keys) using CNNs and Transformer architectures. Under preparation for publication.</div>
-      <div class="pub-meta">
-        <span class="pub-authors">A. Maggiore — Sapienza, 2025</span>
-        <div class="pub-link-icon">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-      </div>
-    </a>
   </div>
 </section>
 
@@ -1260,22 +1210,6 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') toggleDrawer(false);
   });
-
-  // ── Cursor ──────────────────────────────────────
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursor-ring');
-  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-  function animCursor() {
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top = mouseY + 'px';
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    ring.style.left = ringX + 'px';
-    ring.style.top = ringY + 'px';
-    requestAnimationFrame(animCursor);
-  }
-  animCursor();
 
   // ── Navbar scroll ───────────────────────────────
   const navbar = document.getElementById('navbar');
